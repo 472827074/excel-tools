@@ -15,25 +15,25 @@ import org.springframework.stereotype.Component;
 
 import com.zhibitech.framework.core.utils.DateUtil;
 
-@Component("validateUtils")
+
 public class ValidateUtils {
 	/**
 	 * 
 	 * 功能：校验字符串 并返回(如果为空或者null)
 	 */
-	public boolean emptyString(String text) {
+	public static boolean emptyString(String text) {
 		return StringUtils.isEmpty(text);
 	}
 
-	public boolean nullObj(Object obj) {
+	public static boolean nullObj(Object obj) {
 		return null == obj;
 	}
 
-	public boolean nullBoolean(Boolean flag) {
+	public static boolean nullBoolean(Boolean flag) {
 		return null == flag;
 	}
 
-	public boolean containValue(String value, String[] values) {
+	public static boolean containValue(String value, String[] values) {
 		boolean flag = false;
 		for (String vl : values) {
 			if (vl.equals(value)) {
@@ -44,14 +44,7 @@ public class ValidateUtils {
 		return flag;
 	}
 
-	public String getShortClassName(Class clazz) {
-		String[] names = clazz.getName().split("\\.");
-		String attr = names[names.length - 1];
-		attr = attr.substring(0, 1).toLowerCase() + attr.substring(1);
-		return attr;
-	}
-
-	public String[] cellValueTrim(String[] cellValues) {
+	public static String[] cellValueTrim(String[] cellValues) {
 		for (int i = 0; i < cellValues.length; i++) {
 			cellValues[i] = cellValues[i].trim();
 		}
@@ -63,7 +56,7 @@ public class ValidateUtils {
 	 * 
 	 */
 	/*
-	 * public boolean isDate(String string) { if (string .replaceAll(
+	 * public static boolean isDate(String string) { if (string .replaceAll(
 	 * "^((((1[6-9]|[2-9]\\d)\\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\\d|3[01]))|(((1[6-9]|[2-9]\\d)\\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\\d|30))|(((1[6-9]|[2-9]\\d)\\d{2})-0?2-(0?[1-9]|1\\d|2[0-8]))|(((1[6-9]|[2-9]\\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29))$"
 	 * , "").length() == 0) { return true; } return false; }
 	 */
@@ -73,7 +66,7 @@ public class ValidateUtils {
 	 * @param str
 	 * @return
 	 */
-	public boolean isDate(String strDate) {
+	public static boolean isDate(String strDate) {
 		Pattern pattern = Pattern
 				.compile("^((\\d{2}(([02468][048])|([13579][26]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])))))|(\\d{2}(([02468][1235679])|([13579][01345789]))[\\-\\/\\s]?((((0?[13578])|(1[02]))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(3[01])))|(((0?[469])|(11))[\\-\\/\\s]?((0?[1-9])|([1-2][0-9])|(30)))|(0?2[\\-\\/\\s]?((0?[1-9])|(1[0-9])|(2[0-8]))))))(\\s(((0?[0-9])|([1-2][0-3]))\\:([0-5]?[0-9])((\\s)|(\\:([0-5]?[0-9])))))?$");
 		Matcher m = pattern.matcher(strDate);
@@ -88,7 +81,7 @@ public class ValidateUtils {
 	 * 功能：判断一个字符串是否包含特殊字符 （汉字a-z A-Z 0-9）
 	 * 
 	 */
-	public boolean isConSpeCharacters(String string) {
+	public static boolean isConSpeCharacters(String string) {
 		if (string.replaceAll(
 				"[\u4e00-\u9fa5]*[a-z]*[A-Z]*\\d*-*_*\\s*）*（*\\(*\\)*", "")
 				.length() == 0) {
@@ -101,7 +94,7 @@ public class ValidateUtils {
 	 * 功能：判断一个IP是否合法
 	 * 
 	 */
-	public boolean isLegalIp(String string) {
+	public static boolean isLegalIp(String string) {
 		if (string
 				.replaceAll(
 						"(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])",
@@ -110,8 +103,16 @@ public class ValidateUtils {
 		}
 		return false;
 	}
-
-	public boolean illegalStringLength(int min, int max, String text) {
+    /**
+     * 
+     * 判断字符串长度范围
+     * @param min
+     * @param max
+     * @param text
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+	public static boolean illegalStringLength(int min, int max, String text) {
 		if (emptyString(text)) {
 			if (min > 0) {
 				return true;
@@ -134,21 +135,21 @@ public class ValidateUtils {
 		return !text.matches("^1[0-9]\\d{9}$");
 	}
 
-	public boolean illegalEmail(String mail) {
+	public static boolean illegalEmail(String mail) {
 		String regex = ("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(mail);
 		return !m.find();
 	}
 
-	public boolean illegalWebSite(String mail) {
+	public static boolean illegalWebSite(String mail) {
 		String regex = "^(http|https)://(([a-zA-z0-9]|-){1,}\\.){1,}[a-zA-z0-9]{1,}-*";
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(mail);
 		return !m.find();
 	}
 
-	public boolean illegalTelephone(String text) {
+	public static boolean illegalTelephone(String text) {
 		if (text.length() <= 20 && text.charAt(0) != '-'
 				&& text.charAt(text.length() - 1) != '-') {
 			for (int i = 0; i < text.length(); i++) {
@@ -192,7 +193,7 @@ public class ValidateUtils {
 	 * @return 有效：返回 false 无效：返回true
 	 * @throws ParseException
 	 */
-	public boolean illegalIdcard(String IDStr) {
+	public static boolean illegalIdcard(String IDStr) {
 		if (null == IDStr || "".equals(IDStr)) {
 			return false;
 		}
@@ -288,7 +289,7 @@ public class ValidateUtils {
 	 * 
 	 * @return
 	 */
-	private Hashtable<String, String> getAreaCode() {
+	private static Hashtable<String, String> getAreaCode() {
 		Hashtable<String, String> hashtable = new Hashtable<String, String>();
 		hashtable.put("11", "北京");
 		hashtable.put("12", "天津");
@@ -334,7 +335,7 @@ public class ValidateUtils {
 	 * @param str
 	 * @return
 	 */
-	public boolean illegalNum(String text) {
+	public static boolean illegalNum(String text) {
 		Pattern pattern = Pattern.compile("[0-9]*");
 		Matcher numbericMatcher = pattern.matcher(text);
 		return !numbericMatcher.matches();
@@ -372,7 +373,7 @@ public class ValidateUtils {
 		return false;
 	}
 
-	public boolean illegalNumeric(String str) {
+	public static boolean illegalNumeric(String str) {
 
 		if (str.charAt(0) == '.' || str.charAt(str.length() - 1) == '.'
 				|| (str.charAt(0) == '-' || str.charAt(0) == '+')
@@ -388,7 +389,7 @@ public class ValidateUtils {
 		}
 	}
 
-	public boolean illegalNumericRange(String str, double min, double max) {
+	public static boolean illegalNumericRange(String str, double min, double max) {
 		BigDecimal value = new BigDecimal(String.valueOf(str));
 		BigDecimal one = new BigDecimal(String.valueOf(min));
 		BigDecimal two = new BigDecimal(String.valueOf(max));
@@ -396,7 +397,7 @@ public class ValidateUtils {
 
 	}
 
-	public boolean illegalDate(String strDate) {
+	public static boolean illegalDate(String strDate) {
 		if (StringUtils.isEmpty(strDate)) {
 			return false;
 		}
@@ -418,7 +419,7 @@ public class ValidateUtils {
 	}
 
 	// 验证日期的长度
-	public boolean illegalLength(String strDate) {
+	public static boolean illegalLength(String strDate) {
 		try {
 			if (strDate.indexOf("-") != -1
 					&& (strDate.substring(strDate.lastIndexOf("-") + 1)
@@ -440,7 +441,7 @@ public class ValidateUtils {
 		}
 	}
 
-	public boolean isChinese(String str) {
+	public static boolean isChinese(String str) {
 		String pattern = "^[0-9]*$";
 		Pattern p = Pattern.compile(pattern);
 		Matcher m = p.matcher(str);
@@ -448,7 +449,7 @@ public class ValidateUtils {
 	}
 
 	// 对年份的验证
-	public boolean illegaYear(String strYear) {
+	public static boolean illegaYear(String strYear) {
 		try {
 			if (!StringUtils.isEmpty(strYear)) {
 				return false;
@@ -467,7 +468,7 @@ public class ValidateUtils {
 		return false;
 	}
 
-	public boolean illegalBoolean(String text) {
+	public static boolean illegalBoolean(String text) {
 		if ("是".equals(text) || "否".equals(text)) {
 			return false;
 		} else {
@@ -475,13 +476,13 @@ public class ValidateUtils {
 		}
 	}
 
-	public int getPrevFourString(String strDate, String style) {
+	public static int getPrevFourString(String strDate, String style) {
 		String str = strDate.substring(0, strDate.indexOf(style, 1));
 		int result = Integer.parseInt(str);
 		return result;
 	}
 
-	public boolean illegalUserName(String text) {
+	public static boolean illegalUserName(String text) {
 		Pattern p = Pattern.compile("^[A-Za-z0-9_]+$");
 		Matcher m = p.matcher(text);
 		return !m.find();
@@ -490,14 +491,14 @@ public class ValidateUtils {
 	/**
 	 * 验证是否输入特殊字符(数字,字母,中文字符)
 	 */
-	public boolean illegalExculdeParticalChar(String text) {
+	public static boolean illegalExculdeParticalChar(String text) {
 		return !text.matches("^[A-Za-z0-9\u4E00-\u9FA5]+$");
 	}
 
 	/**
 	 * 特殊字符验证
 	 */
-	public boolean illegalCharCheck(String text) {
+	public static boolean illegalCharCheck(String text) {
 		return text
 				.matches("^(?:[A-Za-z0-9\\u4E00-\\u9FA5]*[\\(|\\（]*[\\)|\\）]*-*)+$");
 	}
@@ -505,14 +506,14 @@ public class ValidateUtils {
 	/**
 	 * 验证是否输入特殊字符(字母,中文字符)
 	 */
-	public boolean illegalParticalChar(String text) {
+	public static boolean illegalParticalChar(String text) {
 		return !text.matches("^[A-Za-z\u4E00-\u9FA5]+$");
 	}
 
 	/**
 	 * 验证是否输入特殊字符(只能输入数字,字母)
 	 */
-	public boolean illegalExculdeChinese(String text) {
+	public static boolean illegalExculdeChinese(String text) {
 		return !text.matches("^[A-Za-z0-9]+$");
 	}
 
@@ -520,14 +521,14 @@ public class ValidateUtils {
 	 * 验证是否输入特殊字符(数字,字母,中文字符,空格,点)
 	 * 
 	 */
-	public boolean illegalExculdeParticalChar2(String text) {
+	public static boolean illegalExculdeParticalChar2(String text) {
 		return !text.matches("^[A-Za-z0-9\u4E00-\u9FA5\\s\\.]+$");
 	}
 
 	/**
 	 * 验证英文名
 	 */
-	public boolean illegalEnglishName(String text) {
+	public static boolean illegalEnglishName(String text) {
 		return !text.matches("[^\u4e00-\u9fa5]+$");
 	}
 
@@ -537,7 +538,7 @@ public class ValidateUtils {
 	 * @param text
 	 * @return
 	 */
-	public boolean illegalNumberZZ(String text) {
+	public static boolean illegalNumberZZ(String text) {
 		Pattern pattern = Pattern.compile("[^(0|\\-|\\s)*][0-9]*$");
 		Matcher numbericMatcher = pattern.matcher(text);
 		return !numbericMatcher.matches();
@@ -550,7 +551,7 @@ public class ValidateUtils {
 	 * @param text
 	 * @return
 	 */
-	public boolean illegalNumberZS(String text) {
+	public static boolean illegalNumberZS(String text) {
 		Pattern pattern = Pattern.compile("[0-9]+(.[0-9]+)?");
 		Matcher numbericMatcher = pattern.matcher(text);
 		return !numbericMatcher.matches();
@@ -563,13 +564,13 @@ public class ValidateUtils {
 	 * @param text
 	 * @return
 	 */
-	public boolean illegalPointNumber(String text) {
+	public static boolean illegalPointNumber(String text) {
 		Pattern pattern = Pattern.compile("^[0-9]+(.[0-9]{1,2})?$");
 		Matcher numbericMatcher = pattern.matcher(text);
 		return !numbericMatcher.matches();
 	}
 
-	public boolean illegalInteger(String str) {
+	public static boolean illegalInteger(String str) {
 		Pattern pattern = Pattern.compile("[0-9]*");
 		Matcher numbericMatcher = pattern.matcher(str);
 		if (!numbericMatcher.matches()) {
@@ -590,7 +591,7 @@ public class ValidateUtils {
 	 * @param text
 	 * @return
 	 */
-	public boolean illegalPointNumber4(String text) {
+	public static boolean illegalPointNumber4(String text) {
 		if (text.startsWith("0"))
 			return false;
 		Pattern pattern = Pattern.compile("^[0-9]+(.[0-9]{1,4})?$");
@@ -598,14 +599,14 @@ public class ValidateUtils {
 		return !numbericMatcher.matches();
 	}
 
-	public boolean dateIsnotNull(Date date) {
+	public static boolean dateIsnotNull(Date date) {
 		if (null == date) {
 			return false;
 		}
 		return true;
 	}
 
-	public boolean isAddress(String string) {
+	public static boolean isAddress(String string) {
 		if (string.replaceAll("/^[^~!@$%^&*+]{0,}$/gm", "").length() == 0) {
 			return false;
 		}

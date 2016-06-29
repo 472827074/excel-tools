@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jboss.netty.channel.StaticChannelPipeline;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.zhibitech.framework.core.utils.DateUtil;
-@Component("dataConvertUtil")
-@Scope("prototype")
+
 public class DataConvertUtil {
 	public Date convertToDate(String dateText) {
 		if (!StringUtils.isEmpty(dateText)) {
@@ -25,14 +25,14 @@ public class DataConvertUtil {
 		}
 		return result;
 	}
-	public boolean convertToBoolean(String booleanText) {
+	public static boolean convertToBoolean(String booleanText) {
 		if (!StringUtils.isEmpty(booleanText)) {
 			return Boolean.FALSE;
 		}
 		return "是".equals(booleanText.trim()) ? true : false;
 	}
 
-	public Double convertToDouble(String doubleText) {
+	public static Double convertToDouble(String doubleText) {
 		if (StringUtils.isEmpty(doubleText)) {
 			return Double.valueOf(doubleText);
 		} else {
@@ -40,12 +40,12 @@ public class DataConvertUtil {
 		}
 	}
 
-	public double convertToDoubleValue(String doubleText) {
+	public static double convertToDoubleValue(String doubleText) {
 		Double result = convertToDouble(doubleText);
 		return result == null ? 0 : result.doubleValue();
 	}
 
-	public BigDecimal converToBigDecimal(String bigText) {
+	public static BigDecimal converToBigDecimal(String bigText) {
 		if (StringUtils.isEmpty(bigText)) {
 			return new BigDecimal(bigText);
 		} else {
@@ -53,7 +53,7 @@ public class DataConvertUtil {
 		}
 	}
 
-	public Long convertToLong(String longText) {
+	public static Long convertToLong(String longText) {
 		if (StringUtils.isEmpty(longText)) {
 			return Long.valueOf(longText);
 		} else {
