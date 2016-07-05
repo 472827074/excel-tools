@@ -28,15 +28,15 @@ import org.apache.poi.ss.usermodel.Comment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zhibitech.easyreport.tools.exceltool.data.AttachmentCfg;
 import com.zhibitech.easyreport.tools.exceltool.validate.ValidateResult;
 import com.zhibitech.framework.core.utils.StringUtils;
+
 /**
  * 
- * @author YuMeng
- * 错误分析表相关
+ * @author YuMeng 错误分析表相关
  */
 public class ErrorExcelHandle {
+
 	private InputStream inputStream;
 	private File storedFile;// 保存文件路径
 	private HSSFPatriarch drawing;// 操作EXCEL表的容器
@@ -48,23 +48,19 @@ public class ErrorExcelHandle {
 	private String errorFileUrl;// 错误数据表路径
 	private String errorFileDownloadUrl;// 错误数据表下载路径
 
-	public final static Logger logger = LoggerFactory
-			.getLogger(ErrorExcelHandle.class);
+	public final static Logger logger = LoggerFactory.getLogger(ErrorExcelHandle.class);
 
 	// 创建错误表
 	public String createErrorDataExcel(String fileName) {
 		String tempName = fileName;
 		try {
-			String baseTempUrl = AttachmentCfg.excel_template_dir;
-			inputStream = new java.io.FileInputStream(baseTempUrl
-					+ File.separator + tempName);
-			BufferedInputStream bufferedInputStream = new BufferedInputStream(
-					inputStream);
+			String baseTempUrl = "";
+			inputStream = new java.io.FileInputStream(baseTempUrl + File.separator + tempName);
+			BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
 			File file = createStoreFile(fileName);
 
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
-			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-					fileOutputStream);
+			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
 
 			int i = -1;
 			while ((i = bufferedInputStream.read()) != -1) {
@@ -131,12 +127,9 @@ public class ErrorExcelHandle {
 
 			if (i % 2 == 0 && i != 0 && totalDatas[1][i].length() > 0) {
 				HSSFRichTextString ts = new HSSFRichTextString(totalDatas[1][i]);
-				ts.applyFont(0, totalDatas[1][i].length() - 1,
-						getFontNotColorStyle(workbook));
+				ts.applyFont(0, totalDatas[1][i].length() - 1, getFontNotColorStyle(workbook));
 				if (totalDatas[1][i].indexOf("*") != -1) {
-					ts.applyFont(totalDatas[1][i].indexOf("*"),
-							totalDatas[1][i].length(),
-							getFontColorStyle(workbook));
+					ts.applyFont(totalDatas[1][i].indexOf("*"), totalDatas[1][i].length(), getFontColorStyle(workbook));
 				}
 
 				cell.setCellValue(ts);
@@ -150,8 +143,8 @@ public class ErrorExcelHandle {
 	}
 
 	// 将单条错误信息加入到表中
-	public void addErrorMessage(ValidateResult result, String[] rowData,
-			int currentRow, String dataType, int checkOrgOrNot) {
+	public void addErrorMessage(ValidateResult result, String[] rowData, int currentRow, String dataType,
+			int checkOrgOrNot) {
 		try {
 			addNewErrorRow(result, rowData, workbook, sheet, style, currentRow);
 		} catch (FileNotFoundException e) {
@@ -173,9 +166,8 @@ public class ErrorExcelHandle {
 
 	}
 
-	private void addNewErrorRow(ValidateResult result, String[] rowData,
-			HSSFWorkbook workbook, HSSFSheet sheet, HSSFCellStyle style,
-			int currentRow) throws Exception {
+	private void addNewErrorRow(ValidateResult result, String[] rowData, HSSFWorkbook workbook, HSSFSheet sheet,
+			HSSFCellStyle style, int currentRow) throws Exception {
 		HSSFRow row = sheet.createRow(currentRow);
 		HSSFCell cell;
 		for (int i = 0; i < rowData.length; i++) {
@@ -197,11 +189,9 @@ public class ErrorExcelHandle {
 	}
 
 	// 添加批注
-	private Comment getComment(HSSFWorkbook workbook, HSSFSheet sheet,
-			String info) {
+	private Comment getComment(HSSFWorkbook workbook, HSSFSheet sheet, String info) {
 
-		HSSFComment comment = drawing.createComment(new HSSFClientAnchor(100,
-				0, 0, 0, (short) 1, 1, (short) 6, 8));
+		HSSFComment comment = drawing.createComment(new HSSFClientAnchor(100, 0, 0, 0, (short) 1, 1, (short) 6, 8));
 		// 输入批注信息
 		comment.setString(new HSSFRichTextString(info));
 		comment.setAuthor("Apache POI");
@@ -264,15 +254,16 @@ public class ErrorExcelHandle {
 		int intDay = calCurrent.get(Calendar.DATE);
 		int intMonth = calCurrent.get(Calendar.MONTH) + 1;
 		int intYear = calCurrent.get(Calendar.YEAR);
-		String errorFile = String.valueOf(intYear)+intMonth+intDay+intHour+intMinute+intMillisecond+"-"+extendname;
-		storedFile = new File(AttachmentCfg.excel_upload_dir + File.separator+errorFile);
+		String errorFile = String.valueOf(intYear) + intMonth + intDay + intHour + intMinute + intMillisecond + "-"
+				+ extendname;
+		storedFile = new File(AttachmentCfg.excel_upload_dir + File.separator + errorFile);
 		if (!storedFile.getParentFile().isDirectory()) {
 			storedFile.getParentFile().mkdirs();
 		}
 		if (!storedFile.exists()) {
 			storedFile.createNewFile();
 		}
-		setErrorFileUrl(AttachmentCfg.excel_upload_dir + File.separator+errorFile);
+		setErrorFileUrl(AttachmentCfg.excel_upload_dir + File.separator + errorFile);
 		return storedFile;
 	}
 
@@ -291,6 +282,7 @@ public class ErrorExcelHandle {
 	public void setTotalDatas(String[][] totalDatas) {
 		this.totalDatas = totalDatas;
 	}
+
 	public String getErrorFileDownloadUrl() {
 		return errorFileDownloadUrl;
 	}

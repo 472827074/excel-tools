@@ -11,7 +11,7 @@ public class ExcelData implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final int FIRST = 0;
 	public static final int BEAN = 1;
-	//总的sheet,机构为,sheet索引->sheet内容集合，结构为行号->行号对应的列值对集合。
+	//总的sheet,结构为,sheet索引->sheet内容集合，结构为行号->行号对应的列值对集合。
 	private Map<Integer, Map<Integer, Map<Integer, String>>> sheets = new HashMap<Integer, Map<Integer, Map<Integer, String>>>();
 	//当前获取的sheet类容集合
 	private Map<Integer, Map<Integer, String>> currentSheet = null;
