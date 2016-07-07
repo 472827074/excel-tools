@@ -1,4 +1,4 @@
-package com.zhibitech.easyreport.tools.exceltool.impt;
+package com.zhibitech.easyreport.tools.exceltool;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,8 +15,6 @@ import org.apache.poi.hssf.record.NumberRecord;
 import org.apache.poi.hssf.record.Record;
 import org.apache.poi.hssf.record.SSTRecord;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-
-import com.zhibitech.easyreport.tools.exceltool.data.ExcelData;
 
 /**
  * 默认提供的excel数据读取实现

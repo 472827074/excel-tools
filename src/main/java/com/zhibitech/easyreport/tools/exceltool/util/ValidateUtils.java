@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Component;
 
 import com.zhibitech.framework.core.utils.DateUtil;
 

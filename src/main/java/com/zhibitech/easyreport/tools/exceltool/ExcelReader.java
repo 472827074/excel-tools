@@ -1,9 +1,7 @@
-package com.zhibitech.easyreport.tools.exceltool.impt;
+package com.zhibitech.easyreport.tools.exceltool;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import com.zhibitech.easyreport.tools.exceltool.data.ExcelData;
 
 /**
  * excel数据读取

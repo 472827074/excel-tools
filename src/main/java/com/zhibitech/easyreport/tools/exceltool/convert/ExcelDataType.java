@@ -1,4 +1,4 @@
-package com.zhibitech.easyreport.tools.exceltool.impt;
+package com.zhibitech.easyreport.tools.exceltool.convert;
 
 public class ExcelDataType {
 	public final static String DICT = "DICT";

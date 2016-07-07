@@ -1,4 +1,4 @@
-package com.zhibitech.easyreport.tools.exceltool.impt;
+package com.zhibitech.easyreport.tools.exceltool.convert;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +28,7 @@ public class ExcelImportHelper {
 	public final static Logger logger = LoggerFactory
 			.getLogger(ExcelImportHelper.class);
 	
-	@Autowired
-	private  DictService dictService;
+	
 	@Autowired
 	protected  DataConvertUtil convertUtil ;
 	@Autowired
@@ -49,9 +48,7 @@ public class ExcelImportHelper {
 				if (!validateDate(beanDatas, cellValues, i, object, mapMessages)) {
 					continue;
 				}
-				if (!validateDict(beanDatas, cellValues, i, object, mapMessages)) {
-					continue;
-				}
+				
 				if (!validateBoolean(beanDatas, cellValues, i, object,
 						mapMessages)) {
 					continue;
@@ -75,7 +72,7 @@ public class ExcelImportHelper {
 				}
 			}
 
-			vr.setMapMessages(mapMessages);
+		
 			return object;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,46 +102,7 @@ public class ExcelImportHelper {
 		return true;
 	}
 	
-	private  boolean validateDict(String[][] beanDatas,
-			String[] cellValues, int i, Object object,
-			Map<String, String> mapMessages) {
-		if (ExcelDataType.DICT.equals(beanDatas[1][i])) {
-			try {
-				List<Dict> dicts = dictService.findDictByDomainName(beanDatas[2][i], "DDC244F60B884A29979CE715FBCE14F1");//appId为政府监管
-				/*if (dicts==null || dicts.size()==0) {
-					mapMessages.put(String.valueOf(i), beanDatas[2][i]
-							+ "输入不正确");
-					return false;
-				}
-				List<Dict> list = dictService.findDictByDomainId(dicts.get(0).getId());*/
-				if (dicts==null || dicts.size()==0) {
-					mapMessages.put(String.valueOf(i), beanDatas[2][i]
-							+ "输入不正确");
-					return false;
-				}else{
-					boolean flag = false;
-					for(Dict dict:dicts){
-						if(dict.getName().equals(cellValues[i])){
-							Ognl.setValue(beanDatas[0][i], object,
-									dict.getId());
-							flag = true;
-						}
-					}
-					if(!flag){
-						mapMessages.put(String.valueOf(i), beanDatas[2][i]
-								+ "输入不正确");
-					}
-				}
-				
-				return false;
-			} catch (OgnlException e) {
-				mapMessages.put(String.valueOf(i), beanDatas[2][i]
-						+ "输入不正确");
-			}
-		}
-		return true;
-	}
-
+	
 	private static boolean validateBoolean(String[][] beanDatas,
 			String[] cellValues, int i, Object object,
 			Map<String, String> mapMessages) {

@@ -1,4 +1,4 @@
-package com.zhibitech.easyreport.tools.exceltool.impt;
+package com.zhibitech.easyreport.tools.exceltool.convert;
 
 import java.beans.PropertyEditor;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class DefaultDataConverter extends AbstractDataConverter {
 			try {
 				bw.setPropertyValue(propertyNames[i], cellValues[i]);
 			} catch (Exception e) {
-				result.addErrorMessage(0, 0, "111");
+			//	result.addErrorMessage(0, 0, "111");
 			}
 		}
 

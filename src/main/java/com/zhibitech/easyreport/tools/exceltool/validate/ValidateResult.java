@@ -1,43 +1,37 @@
 package com.zhibitech.easyreport.tools.exceltool.validate;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ValidateResult extends EntityValidateResult implements
-		Serializable {
+public class ValidateResult implements Serializable {
 
 	private static final long serialVersionUID = 8758821696627253640L;
+	private static final String EMPTY_MESSAGE = "";
+	private static final String DEFAULT_MSG_SEPERATOR = "\n";
+	protected Map<Integer, String> messages = new HashMap<Integer, String>();
 
-	
-
-	public void addErrorMessage(int row, int column, String msg) {
-		messages.add(
-				"在单元格[" + convertToExcelCell(row, column - 1) + "]发现数据错误，错误为："
-						+ msg);
+	public Map<Integer, String> getMessages() {
+		return messages;
 	}
 
-	public void addErrorMessage(int row, String msg) {
-		if (row > 0) {
-			messages.add("单元行第[" + row + "]行" + msg);
-		} else if (row == -1) {
-			messages.add(msg);
-		} else {
-			messages.add("单元行第[" + row + "]行" + msg);
+	public void addErrorMessage(Integer cellIndex, String msg) {
+		this.messages.put(cellIndex, msg);
+	}
+
+	public boolean hasError() {
+		return messages.size() > 0;
+	}
+
+	public String getAllMessages() {
+		if (!hasError())
+			return EMPTY_MESSAGE;
+		StringBuilder sb = new StringBuilder();
+		for (Integer key : messages.keySet()) {
+			sb.append(messages.get(key));
+			sb.append(DEFAULT_MSG_SEPERATOR);
 		}
-
-	}
-
-	private String convertToExcelCell(int row, int column) {
-		return getCellColumnString(column) + row;
-	}
-
-	private String getCellColumnString(int column) {
-		int letterPrefixIndex = column / 26;
-		int letterIndex = column % 26;
-		if (letterPrefixIndex > 0) {
-			return getCellColumnString(letterPrefixIndex - 1)
-					+ getCellColumnString(letterIndex);
-		}
-		return String.valueOf((char) (65 + letterIndex));
+		return sb.toString();
 	}
 
 }

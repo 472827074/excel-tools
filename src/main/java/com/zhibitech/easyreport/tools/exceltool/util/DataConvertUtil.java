@@ -4,14 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.netty.channel.StaticChannelPipeline;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.zhibitech.framework.core.utils.DateUtil;
 
 public class DataConvertUtil {
-	public Date convertToDate(String dateText) {
+	
+	public static Date convertToDate(String dateText) {
 		if (!StringUtils.isEmpty(dateText)) {
 			return null;
 		}
@@ -61,7 +59,7 @@ public class DataConvertUtil {
 		}
 	}
 
-	public Integer convertToInteger(String text) {
+	public static Integer convertToInteger(String text) {
 		if (StringUtils.isEmpty(text)) {
 			return Integer.valueOf(text);
 		} else {
