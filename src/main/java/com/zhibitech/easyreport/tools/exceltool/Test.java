@@ -20,11 +20,9 @@ public class Test {
 		AbstractDataConverter convert = new DefaultDataConverter();
 		convert.setValidate(null);
 		ValidateResult validateResult = new ValidateResult();
-		validateResult.
 		User user = convert.convertToObj(excelData[1], beanData[1], validateResult, User.class);
 		System.out.println(user.getPassword());
 		ErrorExcelHandle errorExcelHandle = new ErrorExcelHandle("user.xlsx");
-		errorExcelHandle.addErrorMessage(result, rowData, currentRow);
 
 	}
 
