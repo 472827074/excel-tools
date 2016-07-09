@@ -24,6 +24,6 @@ public interface DataConvert {
 	 * @return
 	 * @see [类、类#方法、类#成员]
 	 */
-	<T> T convertToObj(String[] cellValues,String[][] beanDatas, ValidateResult result,Class<T> clz);
+	<T> T convertToObj(String[] beanDatas,String[] cellValues, ValidateResult result,Class<T> clz);
 
 }

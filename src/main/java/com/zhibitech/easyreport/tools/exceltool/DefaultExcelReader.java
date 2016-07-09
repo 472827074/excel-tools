@@ -1,8 +1,10 @@
 package com.zhibitech.easyreport.tools.exceltool;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.poi.hssf.eventusermodel.FormatTrackingHSSFListener;
 import org.apache.poi.hssf.eventusermodel.HSSFEventFactory;
@@ -15,40 +17,88 @@ import org.apache.poi.hssf.record.NumberRecord;
 import org.apache.poi.hssf.record.Record;
 import org.apache.poi.hssf.record.SSTRecord;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * 默认提供的excel数据读取实现
+ * 
  * @author yumeng
- * @version  [版本号, 2016年6月29日]
- * @see  [相关类/方法]
- * @since  [产品/模块版本]
+ * @version [版本号, 2016年6月29日]
+ * @see [相关类/方法]
+ * @since [产品/模块版本]
  */
 public class DefaultExcelReader implements ExcelReader {
 
-	public ExcelData readFile(FileInputStream file) throws IOException {
-		POIFSFileSystem fs = new POIFSFileSystem(file);
-		HSSFEventFactory factory = new HSSFEventFactory();
-		HSSFRequest request = new HSSFRequest();
-		ExcelData data = new ExcelData();
-		request.addListener(new BOFRecordListener(data), BOFRecord.sid);
-		SSTRecordListener stringListener = new SSTRecordListener(data);
-		request.addListener(stringListener, SSTRecord.sid);
-		request.addListener(stringListener, LabelSSTRecord.sid);
-		NumbericListener numberListener = new NumbericListener(data);
-		FormatTrackingHSSFListener fl = new FormatTrackingHSSFListener(numberListener);
-		numberListener.setFormatTrackingHSSFListener(fl);
-		request.addListenerForAllRecords(fl);
+	public ExcelData readFile(File file) throws IOException {
 
-		factory.processWorkbookEvents(request, fs);
+		if (file == null) {
+			throw new IOException("文件未找到");
+		}
+		String fileName = file.getName();
+		String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
+		ExcelData data = new ExcelData();
+		if (ExcelReader.EXCEL_PREFIX_XLS.equals(prefix.toLowerCase())) {
+			POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+			HSSFEventFactory factory = new HSSFEventFactory();
+			HSSFRequest request = new HSSFRequest();
+			request.addListener(new BOFRecordListener(data), BOFRecord.sid);
+			SSTRecordListener stringListener = new SSTRecordListener(data);
+			request.addListener(stringListener, SSTRecord.sid);
+			request.addListener(stringListener, LabelSSTRecord.sid);
+			NumbericListener numberListener = new NumbericListener(data);
+			FormatTrackingHSSFListener fl = new FormatTrackingHSSFListener(numberListener);
+			numberListener.setFormatTrackingHSSFListener(fl);
+			request.addListenerForAllRecords(fl);
+			factory.processWorkbookEvents(request, fs);
+		} else if (ExcelReader.EXCEL_PREFIX_XLSX.equals(prefix.toLowerCase())) {
+			InputStream is = new FileInputStream(file);
+			@SuppressWarnings("resource")
+			XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
+			// 读取sheet;
+			for (int numSheet = 0; numSheet < xssfWorkbook.getNumberOfSheets(); numSheet++) {
+				XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(numSheet);
+				if (xssfSheet == null) {
+					continue;
+				}
+				// 创建一个sheet数据记录
+				data.addWorkSheet();
+				// 读取row
+				for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
+					XSSFRow xssfRow = xssfSheet.getRow(rowNum);
+					if (xssfRow != null) {
+						short cellSize = xssfRow.getLastCellNum();
+						for (short i = 0; i < cellSize; i++) {
+							XSSFCell no = xssfRow.getCell(i);
+							if(no != null){
+								no.setCellType(Cell.CELL_TYPE_STRING);
+								data.addString(rowNum, i, no.getStringCellValue());
+							}
+							
+						}
+
+					}
+				}
+			}
+
+		} else {
+			throw new IOException("不是excel数据");
+		}
 		return data;
 	}
 
 	public static void main(String args[]) {
 		try {
 			ExcelReader reader = new DefaultExcelReader();
-			ExcelData data = reader.readFile(new FileInputStream("d:\\测试1.xls"));
-			String as[][] = data.getSheetDatas(1);
-			System.out.println(as[0]);
+			String projectDir = System.getProperty("user.dir");
+			System.out.println(projectDir);
+
+			ExcelData data = reader.readFile(new File(projectDir + "\\template\\user.xlsx"));
+			System.out.println(data.getSheetDatas(0)[0][0]);
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

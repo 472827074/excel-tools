@@ -11,7 +11,7 @@ import com.zhibitech.easyreport.tools.exceltool.validate.ValidateResult;
 public class DefaultDataConverter extends AbstractDataConverter {
 
 	@Override
-	public <T> T convertToObj(String[] cellValues, String[][] beanDatas, ValidateResult result, Class<T> clz) {
+	public <T> T convertToObj(String[] beanDatas,String[] cellValues,  ValidateResult result, Class<T> clz) {
 		if (clz == null) {
 			throw new IllegalArgumentException("转换类型不能为空");
 		}
@@ -26,11 +26,10 @@ public class DefaultDataConverter extends AbstractDataConverter {
 		for (Map.Entry<Class<?>, PropertyEditor> entry : propertyEditors.entrySet()) {
 			bw.registerCustomEditor(entry.getKey(), entry.getValue());
 		}
-		int length = beanDatas[0].length > cellValues.length ? cellValues.length : beanDatas[0].length;
-		String propertyNames[] = beanDatas[0];
+		int length = beanDatas.length > cellValues.length ? cellValues.length : beanDatas.length;
 		for (int i = 0; i < length; i++) {
 			try {
-				bw.setPropertyValue(propertyNames[i], cellValues[i]);
+				bw.setPropertyValue(beanDatas[i], cellValues[i]);
 			} catch (Exception e) {
 			//	result.addErrorMessage(0, 0, "111");
 			}

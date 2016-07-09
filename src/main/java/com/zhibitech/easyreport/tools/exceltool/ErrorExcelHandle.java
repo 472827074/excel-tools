@@ -1,4 +1,4 @@
-package com.zhibitech.easyreport.tools.exceltool.convert;
+package com.zhibitech.easyreport.tools.exceltool;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,38 +10,55 @@ import java.util.Map;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFComment;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Comment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.zhibitech.easyreport.tools.exceltool.validate.ValidateResult;
 
+
 /**
+ * <一句话功能简述>
+ * <功能详细描述>
  * 
- * @author YuMeng 错误分析表相关
+ * @author  姓名 工号
+ * @version  [版本号, 2016年7月9日]
+ * @see  [相关类/方法]
+ * @since  [产品/模块版本]
  */
 public class ErrorExcelHandle {
 
-	private HSSFPatriarch drawing;// 操作EXCEL表的容器
-	private HSSFWorkbook workbook;// 工作薄
-	private HSSFSheet sheet;// excel sheet数据；
+	private Drawing drawing;// 操作EXCEL表的容器
+	
+	private Workbook workbook;// 工作薄
+	//private HSSFSheet sheet;// excel sheet数据；
+	private Sheet sheet;
+	
+	private CellStyle cellStyle;
+	
 	private HSSFCellStyle style;// 表的样式
 
-	public final static Logger logger = LoggerFactory.getLogger(ErrorExcelHandle.class);
-
+	String baseTempUrl = "E:\\workspace\\easy-report\\easy-report-exceltool\\template";
+	
 	public ErrorExcelHandle(String fileName) throws Exception {
-		this.workbook = new HSSFWorkbook(new FileInputStream(new File(fileName)));
+		String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
+		if(prefix.toLowerCase().equals("xls")){
+			this.workbook = new HSSFWorkbook(new FileInputStream(new File(baseTempUrl+"\\"+fileName)));
+			
+		}else{
+			this.workbook = new XSSFWorkbook(new FileInputStream(new File(baseTempUrl+"\\"+fileName)));
+		}
 		this.sheet = workbook.getSheetAt(0);
-		this.style = getStyle(workbook);
+		this.cellStyle = getStyle(workbook);
 		this.drawing = sheet.createDrawingPatriarch();
 		createErrorDataExcel(fileName);
 	}
@@ -49,14 +66,12 @@ public class ErrorExcelHandle {
 	// 创建错误表
 	@SuppressWarnings("resource")
 	private void createErrorDataExcel(String fileName) {
-		String tempName = fileName;
 		try {
-			String baseTempUrl = "";
-			FileInputStream inputStream = new FileInputStream(baseTempUrl + File.separator + tempName);
+			FileInputStream inputStream = new FileInputStream(baseTempUrl + File.separator + fileName);
 
 			FileChannel inChanel = inputStream.getChannel();
 
-			File file = new File("错误分析表文件");
+			File file = new File(baseTempUrl + File.separator+"temp.xlsx");
 
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
 
@@ -79,8 +94,8 @@ public class ErrorExcelHandle {
 
 	// 将单条错误信息加入到表中
 	public void addErrorMessage(ValidateResult result, String[] rowData, int currentRow) {
-		HSSFRow row = sheet.createRow(currentRow);
-		HSSFCell cell;
+		Row row = sheet.createRow(currentRow);
+		Cell cell;
 		for (int i = 0; i < rowData.length; i++) {
 			cell = row.createCell(i);
 			// 设置单元格的值
@@ -99,7 +114,7 @@ public class ErrorExcelHandle {
 
 	}
 
-	public void outFile(int currentDealRow, int importDataNum) throws Exception {
+	public void outFile() throws Exception {
 		FileOutputStream fOut = new FileOutputStream(new File(""));
 		workbook.write(fOut);
 		fOut.flush();
@@ -110,47 +125,21 @@ public class ErrorExcelHandle {
 	// 添加批注
 	private Comment getComment(String info) {
 
-		HSSFComment comment = drawing.createComment(new HSSFClientAnchor(100, 0, 0, 0, (short) 1, 1, (short) 6, 8));
+		Comment comment = drawing.createCellComment(new HSSFClientAnchor(100, 0, 0, 0, (short) 1, 1, (short) 6, 8));
 		// 输入批注信息
 		comment.setString(new HSSFRichTextString(info));
 		comment.setAuthor("Apache POI");
 		return comment;
 	}
 
-	// 设置表格字体颜色
-	private HSSFCellStyle getFontStyle(HSSFWorkbook workbook) {
-		HSSFCellStyle style = workbook.createCellStyle();
-		HSSFFont font = workbook.createFont();
-		font.setFontHeightInPoints((short) 12);// 字号
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);// 加粗
-		style.setFont(font);
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);//  居中 
-		return style;
-	}
 
-	// 设置单元格字居中
-	private HSSFCellStyle getCenterStyle(HSSFWorkbook workbook) {
-		HSSFCellStyle style = workbook.createCellStyle();
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);//  居中 
-		return style;
-	}
-
-	// 设置字体颜色
-	private HSSFFont getFontColorStyle(HSSFWorkbook workbook) {
-		HSSFFont font = workbook.createFont();
-		font.setFontName("宋体");
-		font.setFontHeightInPoints((short) 12);// 字号
-		font.setColor(HSSFColor.RED.index);
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD); // 宽度
-		return font;
-	}
 
 	// 设置表格单元背景颜色
-	private HSSFCellStyle getStyle(HSSFWorkbook workbook) {
-		HSSFCellStyle style = workbook.createCellStyle();
+	private CellStyle getStyle(Workbook workbook) {
+		CellStyle style = workbook.createCellStyle();
 		style.setFillForegroundColor(HSSFColor.RED.index);
 		style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		HSSFDataFormat format = workbook.createDataFormat();
+		DataFormat format = workbook.createDataFormat();
 		style.setDataFormat(format.getFormat("@"));// 设置CELL格式
 
 		return style;

@@ -165,7 +165,7 @@ public class ValidateUtils {
 	// TEST
 	public static void main(String[] args) {
 		String idcard = "11010119780501117x";
-		boolean b = new ValidateUtils().illegalIdcard(idcard);
+		boolean b = ValidateUtils.illegalIdcard(idcard);
 		System.out.println(b);
 		// System.out.println(new ValidateHelper().isDate("2012-12-12"));
 
@@ -192,6 +192,7 @@ public class ValidateUtils {
 	 * @return 有效：返回 false 无效：返回true
 	 * @throws ParseException
 	 */
+	@SuppressWarnings("unused")
 	public static boolean illegalIdcard(String IDStr) {
 		if (null == IDStr || "".equals(IDStr)) {
 			return false;
@@ -259,7 +260,7 @@ public class ValidateUtils {
 		// =====================(end)=====================
 
 		// ================ 地区码时候有效 ================
-		Hashtable h = getAreaCode();
+		Hashtable<String,String> h = getAreaCode();
 		if (h.get(Ai.substring(0, 2)) == null) {
 			// errorInfo = "身份证地区编码错误。";
 			return true;

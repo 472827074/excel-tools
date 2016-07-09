@@ -1,5 +1,6 @@
 package com.zhibitech.easyreport.tools.exceltool;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -13,6 +14,8 @@ import java.io.IOException;
  */
 public interface ExcelReader {
 
-	public ExcelData readFile(FileInputStream file) throws IOException;
+	public static final String EXCEL_PREFIX_XLS="xls";
+	public static final String EXCEL_PREFIX_XLSX="xlsx";
+	public ExcelData readFile(File file) throws IOException;
 
 }
