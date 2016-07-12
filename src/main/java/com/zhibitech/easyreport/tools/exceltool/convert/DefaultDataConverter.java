@@ -31,7 +31,7 @@ public class DefaultDataConverter extends AbstractDataConverter {
 			try {
 				bw.setPropertyValue(beanDatas[i], cellValues[i]);
 			} catch (Exception e) {
-			//	result.addErrorMessage(0, 0, "111");
+				result.addErrorMessage(i,"数据出错");
 			}
 		}
 

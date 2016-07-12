@@ -19,7 +19,7 @@ public class ExcelData implements Serializable {
 	private Map<String, Integer> filedIndexMap = new HashMap<String, Integer>();
 
 	private List<int[]> sheetCellSize = new ArrayList<int[]>();
-
+    //行列数
 	private int[] currentSheetCellSize = null;
 
 	public Map<String, Integer> getFiledIndexMap() {

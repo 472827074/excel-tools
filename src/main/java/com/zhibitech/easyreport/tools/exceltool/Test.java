@@ -21,8 +21,10 @@ public class Test {
 		convert.setValidate(null);
 		ValidateResult validateResult = new ValidateResult();
 		User user = convert.convertToObj(excelData[1], beanData[1], validateResult, User.class);
-		System.out.println(user.getPassword());
+		System.out.println(user.getAge());
 		ErrorExcelHandle errorExcelHandle = new ErrorExcelHandle("user.xlsx");
+		errorExcelHandle.addErrorMessage(validateResult, excelData[1], 1);
+		errorExcelHandle.outFile();
 
 	}
 

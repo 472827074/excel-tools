@@ -93,49 +93,6 @@ public class ExcelImportHelper {
 		return true;
 	}
 
-	// private static Boolean validateDictList(String[][] beanDatas,
-	// String[] cellValues, int i, Object object,
-	// Map<String, String> mapMessages) {
-	// try {
-	// if (DataType.DATA_TYPE_DICT_LIST.equals(beanDatas[1][i])) {
-	// if ("是".equals(cellValues[i]) || "有".equals(cellValues[i])) {
-	// List<PropertyDict> dicts = null;
-	// if (null == Ognl.getValue(beanDatas[0][i], object)) {
-	// dicts = new ArrayList<PropertyDict>();
-	// dicts.add(DataConvertUtil.convertToPropertyDict(
-	// beanDatas[2][i], beanDatas[3][i]));
-	//
-	// Ognl.setValue(beanDatas[0][i], object, dicts);
-	// } else {
-	// dicts = (List<PropertyDict>) Ognl.getValue(
-	// beanDatas[0][i], object);
-	// dicts.add(DataConvertUtil.convertToPropertyDict(
-	// beanDatas[2][i], beanDatas[3][i]));
-	// Ognl.setValue(beanDatas[0][i], object, dicts);
-	// }
-	//
-	// if (beanDatas.length > 6) {
-	// if (!"".contains(beanDatas[5][i])) {
-	// Ognl.setValue(beanDatas[4][i], object,
-	// DataConvertUtil.convertToPropertyDict(
-	// beanDatas[5][i], beanDatas[6][i]));
-	// } else {
-	// Ognl.setValue(beanDatas[4][i], object,
-	// beanDatas[6][i]);
-	// }
-	// }
-	//
-	// }
-	// return false;
-	// }
-	// } catch (Exception e) {
-	// logger.error(mapMessages.get(String.valueOf(i + 1)));
-	// throw new ServiceException(mapMessages.get(String.valueOf(i + 1)));
-	// }
-	// return true;
-	//
-	// }
-
 	private static boolean validateInteger(String[][] beanDatas, String[] cellValues, int i, Object object,
 			Map<String, String> mapMessages) {
 		if (ExcelDataType.INTEGER.equals(beanDatas[1][i])) {

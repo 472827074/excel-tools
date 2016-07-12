@@ -15,22 +15,25 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.zhibitech.easyreport.tools.exceltool.validate.ValidateResult;
 
 
 /**
- * <一句话功能简述>
- * <功能详细描述>
+ * excel错误数据分析处理
  * 
- * @author  姓名 工号
+ * @author  yumeng
  * @version  [版本号, 2016年7月9日]
  * @see  [相关类/方法]
  * @since  [产品/模块版本]
@@ -40,22 +43,23 @@ public class ErrorExcelHandle {
 	private Drawing drawing;// 操作EXCEL表的容器
 	
 	private Workbook workbook;// 工作薄
-	//private HSSFSheet sheet;// excel sheet数据；
+
 	private Sheet sheet;
 	
 	private CellStyle cellStyle;
-	
-	private HSSFCellStyle style;// 表的样式
 
-	String baseTempUrl = "E:\\workspace\\easy-report\\easy-report-exceltool\\template";
+	private  String templateUrl = System.getProperty("user.dir")+File.separator+"template";
+	
+	private String excelType;
 	
 	public ErrorExcelHandle(String fileName) throws Exception {
 		String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
-		if(prefix.toLowerCase().equals("xls")){
-			this.workbook = new HSSFWorkbook(new FileInputStream(new File(baseTempUrl+"\\"+fileName)));
+		this.excelType = prefix;
+		if(excelType.toLowerCase().equals("xls")){
+			this.workbook = new HSSFWorkbook(new FileInputStream(new File(templateUrl+File.separator+fileName)));
 			
 		}else{
-			this.workbook = new XSSFWorkbook(new FileInputStream(new File(baseTempUrl+"\\"+fileName)));
+			this.workbook = new XSSFWorkbook(new FileInputStream(new File(templateUrl+File.separator+fileName)));
 		}
 		this.sheet = workbook.getSheetAt(0);
 		this.cellStyle = getStyle(workbook);
@@ -67,15 +71,9 @@ public class ErrorExcelHandle {
 	@SuppressWarnings("resource")
 	private void createErrorDataExcel(String fileName) {
 		try {
-			FileInputStream inputStream = new FileInputStream(baseTempUrl + File.separator + fileName);
-
-			FileChannel inChanel = inputStream.getChannel();
-
-			File file = new File(baseTempUrl + File.separator+"temp.xlsx");
-
-			FileOutputStream fileOutputStream = new FileOutputStream(file);
-
-			FileChannel outChannel = fileOutputStream.getChannel();
+			FileChannel inChanel = new FileInputStream(templateUrl + File.separator + fileName).getChannel();
+			File file = new File(templateUrl + File.separator+"temp.xlsx");
+			FileChannel outChannel =  new FileOutputStream(file).getChannel();
 			ByteBuffer buffer = ByteBuffer.allocate(1024);
 			while (true) {
 				buffer.clear();
@@ -92,7 +90,7 @@ public class ErrorExcelHandle {
 		}
 	}
 
-	// 将单条错误信息加入到表中
+
 	public void addErrorMessage(ValidateResult result, String[] rowData, int currentRow) {
 		Row row = sheet.createRow(currentRow);
 		Cell cell;
@@ -107,7 +105,7 @@ public class ErrorExcelHandle {
 			commentnew = getComment(maps.get(key));
 			cell = row.createCell(key);
 			cell.setCellValue(rowData[key]);
-			cell.setCellStyle(style);
+			cell.setCellStyle(cellStyle);
 			cell.setCellType(HSSFCell.CELL_TYPE_STRING);// 设置单元格格式为文本格式
 			cell.setCellComment(commentnew);
 		}
@@ -115,7 +113,7 @@ public class ErrorExcelHandle {
 	}
 
 	public void outFile() throws Exception {
-		FileOutputStream fOut = new FileOutputStream(new File(""));
+		FileOutputStream fOut = new FileOutputStream(new File(templateUrl + File.separator+"temp.xlsx"));
 		workbook.write(fOut);
 		fOut.flush();
 		fOut.close();
@@ -125,9 +123,19 @@ public class ErrorExcelHandle {
 	// 添加批注
 	private Comment getComment(String info) {
 
-		Comment comment = drawing.createCellComment(new HSSFClientAnchor(100, 0, 0, 0, (short) 1, 1, (short) 6, 8));
+		ClientAnchor clientAnchor = null;
+		RichTextString richTextString = null;
+		if(this.excelType.equals("xls")){
+			richTextString = new HSSFRichTextString(info);
+			clientAnchor = new HSSFClientAnchor(100, 0, 0, 0, (short) 1, 1, (short) 6, 8);
+		}else{
+			richTextString = new XSSFRichTextString(info);
+			clientAnchor = new XSSFClientAnchor(100, 0, 0, 0, (short) 1, 1, (short) 6, 8);
+			
+		}
+		Comment comment = drawing.createCellComment(clientAnchor);
 		// 输入批注信息
-		comment.setString(new HSSFRichTextString(info));
+		comment.setString(richTextString);
 		comment.setAuthor("Apache POI");
 		return comment;
 	}
