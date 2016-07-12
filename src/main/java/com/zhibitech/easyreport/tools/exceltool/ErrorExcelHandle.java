@@ -69,7 +69,7 @@ public class ErrorExcelHandle {
 
 	// 创建错误表
 	@SuppressWarnings("resource")
-	private void createErrorDataExcel(String fileName) {
+	private void createErrorDataExcel(String fileName)  {
 		try {
 			FileChannel inChanel = new FileInputStream(templateUrl + File.separator + fileName).getChannel();
 			File file = new File(templateUrl + File.separator+"temp.xlsx");

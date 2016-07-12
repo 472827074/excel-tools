@@ -8,6 +8,14 @@ import org.springframework.beans.BeanWrapperImpl;
 
 import com.zhibitech.easyreport.tools.exceltool.validate.ValidateResult;
 
+/**
+ * 默认的转换实现
+ * 
+ * @author  yumeng
+ * @version  [版本号, 2016年7月8日]
+ * @see  [相关类/方法]
+ * @since  [产品/模块版本]
+ */
 public class DefaultDataConverter extends AbstractDataConverter {
 
 	@Override

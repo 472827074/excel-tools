@@ -4,6 +4,13 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 验证结果封装
+ * @author  yumeng
+ * @version  [版本号, 2016年7月5日]
+ * @see  [相关类/方法]
+ * @since  [产品/模块版本]
+ */
 public class ValidateResult implements Serializable {
 
 	private static final long serialVersionUID = 8758821696627253640L;

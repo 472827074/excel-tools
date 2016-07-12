@@ -6,6 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <一句话功能简述>
+ * <功能详细描述>
+ * 
+ * @author  姓名 工号
+ * @version  [版本号, 2016年7月5日]
+ * @see  [相关类/方法]
+ * @since  [产品/模块版本]
+ */
 public class ExcelData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
