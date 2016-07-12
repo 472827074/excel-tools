@@ -127,6 +127,7 @@ public class ErrorExcelHandle {
 		RichTextString richTextString = null;
 		if(this.excelType.equals("xls")){
 			richTextString = new HSSFRichTextString(info);
+			//前四个参数是坐标点,后四个参数是编辑和显示批注时的大小.
 			clientAnchor = new HSSFClientAnchor(100, 0, 0, 0, (short) 1, 1, (short) 6, 8);
 		}else{
 			richTextString = new XSSFRichTextString(info);
